@@ -1,0 +1,18 @@
+[
+  {
+    "question": "How many days per week can employees work from home?",
+    "expected_keywords": ["3"]
+  },
+  {
+    "question": "What is the company remote work policy?",
+    "expected_keywords": ["3", "home"]
+  },
+  {
+    "question": "Are receipts required for expense reimbursement?",
+    "expected_keywords": ["receipt"]
+  },
+  {
+    "question": "What is the minimum purchase amount that requires a receipt?",
+    "expected_keywords": ["25"]
+  }
+]

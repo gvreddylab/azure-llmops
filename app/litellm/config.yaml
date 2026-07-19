@@ -1,0 +1,38 @@
+model_list:
+  - model_name: gpt-5-mini
+    litellm_params:
+      model: azure/gpt-5-mini
+      api_base: os.environ/AZURE_OPENAI_ENDPOINT
+      api_key: os.environ/AZURE_OPENAI_API_KEY
+      api_version: "2024-10-21"
+      rpm: 1500      # Azure deployment capacity 250 × 6
+      tpm: 250000    # Azure deployment capacity 250 = 250K TPM
+
+  - model_name: text-embedding-3-small
+    litellm_params:
+      model: azure/text-embedding-3-small
+      api_base: os.environ/AZURE_OPENAI_ENDPOINT
+      api_key: os.environ/AZURE_OPENAI_API_KEY
+      api_version: "2024-10-21"
+      rpm: 3000      # Azure deployment capacity 500, 10s renewal window
+      tpm: 500000    # Azure deployment capacity 500 = 500K TPM
+
+  # Fallback for chat only — Groq does not offer embedding models
+  - model_name: gpt-5-mini-groq-fallback
+    litellm_params:
+      model: groq/llama-3.3-70b-versatile
+      api_key: os.environ/GROQ_API_KEY
+      rpm: 30        # Groq free tier limit for llama-3.3-70b-versatile
+      tpm: 15000     # Groq free tier limit for llama-3.3-70b-versatile
+
+
+router_settings:
+  fallbacks:
+    - gpt-5-mini:
+        - gpt-5-mini-groq-fallback
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+  alerting: ["slack"]
+  alerting_threshold: 300      # latency alert fires if a request exceeds 300s
+  budget_alert_ttl: 28800      # re-alert every 8 hours per budget issue (not every request)
